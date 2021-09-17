@@ -10,7 +10,7 @@ dotenv.config();
 
 const PORT = process.env.PORT;
 
-// Middleware
+// Middlewares
 app.use(express.json());
 app.use(cors());
 
@@ -18,7 +18,6 @@ app.use(cors());
 mongoose
   .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
   })
   .then((response) => {
     console.log('MongoDB connected');
@@ -44,7 +43,12 @@ app.get('/api/users', async (req, res) => {
 // Post
 app.post('/api/users', async (req, res) => {
   const { name, age, email, password } = req.body;
-  const user = new UserModel({ name, age, email, password });
+  const user = new UserModel({
+    name: name,
+    age: age,
+    email: email,
+    password: password,
+  });
 
   try {
     await user.save();
@@ -56,21 +60,23 @@ app.post('/api/users', async (req, res) => {
 
 // Update
 app.put('/api/users', async (req, res) => {
-  const { name, age, email, id } = req.body;
+  const { name, email, id } = req.body;
 
   try {
     await UserModel.findById(id, (err, updateUser) => {
-      updateUser.name = name;
-      updateUser.age = age;
-      updateUser.email = email;
+      updateUser.name = name || updateUser.name;
+
+      updateUser.email = email || updateUser.email;
       updateUser.save();
     });
-    res.send('updated');
+
+    res.json('updated');
   } catch (err) {
-    res.status(403).send({ message: 'Something is Wrong' });
+    return err;
   }
 });
 
+// Delete
 app.delete('/api/users/:id', async (req, res) => {
   const id = req.params.id;
 

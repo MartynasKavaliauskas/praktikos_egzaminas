@@ -1,0 +1,44 @@
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+}
+
+.userCards__container {
+  width: 1024px;
+  display: flex;
+}
+
+.userCard {
+  border: 1px solid #f3f3f3;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.userCard h3 {
+  margin: 0;
+}
+.userCard h4 {
+  margin: 2px;
+}
+
+.input__container {
+  width: 100px;
+}
+.input__container input {
+  height: 20px;
+
+  margin-bottom: 2px;
+}
+
+.btn__container button {
+  width: 90px;
+}
