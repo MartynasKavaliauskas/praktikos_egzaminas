@@ -31,7 +31,7 @@ mongoose
 //Routes
 
 // Get
-app.get('/read', async (req, res) => {
+app.get('/api/users', async (req, res) => {
   UserModel.find({}, (err, result) => {
     if (err) {
       res.send(err);
@@ -42,42 +42,36 @@ app.get('/read', async (req, res) => {
 });
 
 // Post
-app.post('/insert', async (req, res) => {
-  const name = req.body.userName;
-  const age = req.body.age;
-  const email = req.body.email;
-  const password = req.body.password;
+app.post('/api/users', async (req, res) => {
+  const { name, age, email, password } = req.body;
   const user = new UserModel({ name, age, email, password });
 
   try {
     await user.save();
     res.send('inserted data');
   } catch (err) {
-    console.log(err);
+    res.status(403).send({ message: 'Something is Wrong' });
   }
 });
 
 // Update
-app.put('/update', async (req, res) => {
-  const newUserName = req.body.newUserName;
-  const newUserAge = req.body.newUserAge;
-  const newUserEmail = req.body.newUserEmail;
-  const id = req.body.id;
+app.put('/api/users', async (req, res) => {
+  const { name, age, email, id } = req.body;
 
   try {
     await UserModel.findById(id, (err, updateUser) => {
-      updateUser.name = newUserName;
-      updateUser.age = newUserAge;
-      updateUser.email = newUserEmail;
+      updateUser.name = name;
+      updateUser.age = age;
+      updateUser.email = email;
       updateUser.save();
-      res.send('updated');
     });
+    res.send('updated');
   } catch (err) {
-    console.log(err);
+    res.status(403).send({ message: 'Something is Wrong' });
   }
 });
 
-app.delete('/delete/:id', async (req, res) => {
+app.delete('/api/users/:id', async (req, res) => {
   const id = req.params.id;
 
   await UserModel.findByIdAndRemove(id).exec();
